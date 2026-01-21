@@ -45,7 +45,7 @@ export default function Hero() {
     return (
         <section
             id="home"
-            className="min-h-screen flex items-center justify-center relative overflow-hidden hero-bg"
+            className="min-h-screen flex items-center justify-center relative overflow-x-hidden hero-bg"
         >
             {/* Animated Background Particles */}
             {mounted && (
@@ -73,18 +73,18 @@ export default function Hero() {
                 </div>
             )}
 
-            <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 relative z-10 pt-36 pb-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative z-10 pt-36 pb-20 w-full">
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="text-center max-w-5xl mx-auto"
+                    className="text-center max-w-5xl mx-auto w-full overflow-x-hidden"
                 >
                     {/* Large Impactful Headline */}
-                    <motion.div variants={itemVariants} className="mb-10">
-                        <h1 className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.9] tracking-tighter">
+                    <motion.div variants={itemVariants} className="mb-10 w-full overflow-x-hidden">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black leading-[0.9] tracking-tighter break-words overflow-x-hidden w-full">
                             <motion.span 
-                                className="text-gray-800 block mb-2"
+                                className="text-gray-800 block mb-2 break-words"
                                 initial={{ opacity: 0, x: -100 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 1, delay: 0.2, type: "spring", stiffness: 100 }}
@@ -93,7 +93,7 @@ export default function Hero() {
                                 FORGING THE
                             </motion.span>
                             <motion.span 
-                                className="text-white block mb-2"
+                                className="text-white block mb-2 break-words"
                                 initial={{ opacity: 0, y: 100 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 1, delay: 0.4, type: "spring", stiffness: 80 }}
@@ -101,20 +101,20 @@ export default function Hero() {
                                 DIGITAL PULSE
                             </motion.span>
                             <motion.span 
-                                className="flex items-center justify-center gap-3"
+                                className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap break-words"
                                 initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
                                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                                 transition={{ duration: 1, delay: 0.6, type: "spring", stiffness: 120 }}
                             >
                                 <motion.span 
-                                    className="orange-text"
+                                    className="orange-text break-words"
                                     whileHover={{ scale: 1.1, rotate: 5 }}
                                     transition={{ type: "spring", stiffness: 300 }}
                                 >
                                     OF
                                 </motion.span>
                                 <motion.span 
-                                    className="orange-text"
+                                    className="orange-text break-words"
                                     whileHover={{ scale: 1.1, rotate: -5 }}
                                     transition={{ type: "spring", stiffness: 300 }}
                                 >
@@ -127,7 +127,7 @@ export default function Hero() {
                     {/* Description Text */}
                         <motion.p
                             variants={itemVariants}
-                        className="text-white text-base md:text-lg lg:text-xl mb-14 max-w-2xl mx-auto leading-relaxed font-light"
+                        className="text-white text-sm sm:text-base md:text-lg lg:text-xl mb-14 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0 break-words"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
@@ -138,14 +138,14 @@ export default function Hero() {
 
                     {/* CTA Buttons */}
                     <motion.div
-                        className="flex flex-wrap gap-6 justify-center mb-16"
+                        className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 justify-center mb-16 px-4 sm:px-0"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 1 }}
                     >
                         <motion.a
                             href="#contact"
-                            className="btn-primary inline-flex items-center gap-2 text-base px-8 py-4 rounded-lg font-semibold"
+                            className="btn-primary inline-flex items-center justify-center gap-2 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold w-full sm:w-auto"
                             whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255, 107, 53, 0.6)" }}
                             whileTap={{ scale: 0.95 }}
                             transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -155,7 +155,7 @@ export default function Hero() {
                         <motion.a
                             href="/resume.pdf"
                             download
-                            className="px-8 py-4 border-2 border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-2 text-base uppercase tracking-wide backdrop-blur-sm"
+                            className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center justify-center gap-2 text-sm sm:text-base uppercase tracking-wide backdrop-blur-sm w-full sm:w-auto"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -167,15 +167,15 @@ export default function Hero() {
                     {/* Contact Info */}
                         <motion.div
                             variants={itemVariants}
-                        className="flex flex-wrap gap-4 md:gap-8 justify-center items-center text-gray-300 text-sm md:text-base"
+                        className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 md:gap-8 justify-center items-center text-gray-300 text-xs sm:text-sm md:text-base px-4 sm:px-0"
                     >
                         <a
                             href="mailto:bilaliftikhar431@gmail.com"
-                            className="hover:text-[#FF6B35] transition-colors duration-300 whitespace-nowrap"
+                            className="hover:text-[#FF6B35] transition-colors duration-300 break-all sm:break-normal text-center"
                         >
                             bilaliftikhar431@gmail.com
                         </a>
-                        <span className="hidden md:inline text-gray-500">•</span>
+                        <span className="hidden sm:inline text-gray-500">•</span>
                         <a
                             href="https://wa.me/923247203309"
                             target="_blank"
@@ -184,7 +184,7 @@ export default function Hero() {
                         >
                             03247203309
                         </a>
-                        <span className="hidden md:inline text-gray-500">•</span>
+                        <span className="hidden sm:inline text-gray-500">•</span>
                         <span className="whitespace-nowrap">Lahore, Pakistan</span>
                     </motion.div>
 

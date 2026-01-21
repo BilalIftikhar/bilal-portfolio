@@ -12,7 +12,7 @@ import AOSWrapper from '@/components/AOSWrapper';
 export default function Home() {
   return (
     <AOSWrapper>
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-black overflow-x-hidden w-full max-w-full">
         <Navbar />
         <Hero />
         <Specialized />
