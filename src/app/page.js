@@ -1,29 +1,31 @@
-import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
-import Specialized from '@/components/Specialized';
-import About from '@/components/About';
-import Skills from '@/components/Skills';
-import Projects from '@/components/Projects';
-import Testimonials from '@/components/Testimonials';
-import Contact from '@/components/Contact';
-import Footer from '@/components/Footer';
-import AOSWrapper from '@/components/AOSWrapper';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import Hero from '@/components/sections/Hero';
+import About from '@/components/sections/About';
+import Skills from '@/components/sections/Skills';
+import AIExpertise from '@/components/sections/AIExpertise';
+import Projects from '@/components/sections/Projects';
+import Experience from '@/components/sections/Experience';
+import Testimonials from '@/components/sections/Testimonials';
+import Contact from '@/components/sections/Contact';
+import MarqueeStrip from '@/components/ui/MarqueeStrip';
 
 export default function Home() {
   return (
-    <AOSWrapper>
-      <div className="min-h-screen bg-black overflow-x-hidden w-full max-w-full">
-        <Navbar />
+    <>
+      <Navbar />
+      <main className="bg-night overflow-x-hidden">
         <Hero />
-        <Specialized />
+        <MarqueeStrip />
         <About />
         <Skills />
+        <AIExpertise />
         <Projects />
+        <Experience />
         <Testimonials />
         <Contact />
-        <Footer />
-      </div>
-    </AOSWrapper>
+      </main>
+      <Footer />
+    </>
   );
 }
-

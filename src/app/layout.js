@@ -1,22 +1,38 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Bebas_Neue, Syne, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import "aos/dist/aos.css";
 import DevtoolsRemover from "@/components/DevtoolsRemover";
+import CustomCursor from "@/components/ui/CustomCursor";
+import Preloader from "@/components/sections/Preloader";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bebas = Bebas_Neue({
+  variable: "--font-bebas",
+  weight: "400",
   subsets: ["latin"],
+  display: "swap",
+});
+const syne = Syne({
+  variable: "--font-syne",
+  weight: ["600", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
+});
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata = {
-  title: "Muhammad Bilal Iftikhar - Senior Software Engineer | Full Stack Developer",
-  description: "Senior Software Engineer with 5+ years of experience building scalable, user-centric web applications using Laravel, Next.js, and modern JavaScript frameworks. Skilled in REST API development, database optimization, and responsive UI design.",
-  keywords: "Senior Software Engineer, Full Stack Developer, Laravel Developer, React Developer, Next.js, Vue.js, PHP, JavaScript, Web Development, REST APIs, MySQL, PostgreSQL, MongoDB, Lahore Pakistan",
+  title: "Muhammad Bilal Iftikhar — Senior Software Engineer & AI Integration Specialist",
+  description:
+    "I architect intelligent systems that scale, surprise, and solve. Senior Software Engineer specializing in AI/ML integration — LLMs, RAG pipelines, AI agents — and modern full-stack web development.",
+  keywords:
+    "Muhammad Bilal Iftikhar, Senior Software Engineer, AI Integration Specialist, AI Engineer, LLM, RAG, LangChain, OpenAI, Claude, Vector Databases, Next.js, React, Python, Full Stack Developer, Machine Learning, AI Agents",
   authors: [{ name: "Muhammad Bilal Iftikhar" }],
   creator: "Muhammad Bilal Iftikhar",
   metadataBase: new URL("https://bilaliftikhar.com"),
@@ -24,44 +40,38 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: "https://bilaliftikhar.com",
-    title: "Muhammad Bilal Iftikhar - Senior Software Engineer",
-    description: "Full Stack Software Engineer with 5+ years of experience building scalable web applications. Forging the digital pulse of innovation.",
-    siteName: "Bilal Iftikhar Portfolio",
-    images: [
-      {
-        url: "/profile.png",
-        width: 1200,
-        height: 1200,
-        alt: "Muhammad Bilal Iftikhar - Senior Software Engineer",
-      },
-    ],
+    title: "Muhammad Bilal Iftikhar — Senior Software Engineer & AI Integration Specialist",
+    description: "I architect intelligent systems that scale, surprise, and solve.",
+    siteName: "Bilal Iftikhar",
+    images: [{ url: "/profile.png", width: 1200, height: 1200, alt: "Muhammad Bilal Iftikhar" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Bilal Iftikhar - Senior Software Engineer",
-    description: "Full Stack Software Engineer with 5+ years of experience building scalable web applications",
+    title: "Muhammad Bilal Iftikhar — Senior Software Engineer & AI Integration Specialist",
+    description: "I architect intelligent systems that scale, surprise, and solve.",
     images: ["/profile.png"],
   },
   icons: {
-    icon: [
-      { url: "/profile.png", type: "image/png" },
-      { url: "/profile.png", sizes: "32x32", type: "image/png" },
-      { url: "/profile.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: [
-      { url: "/profile.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/profile.png",
+    icon: [{ url: "/profile.png", type: "image/png" }],
+    apple: [{ url: "/profile.png", sizes: "180x180", type: "image/png" }],
   },
+};
+
+export const viewport = {
+  themeColor: "#050510",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${bebas.variable} ${syne.variable} ${mono.variable} antialiased`}
       >
         <DevtoolsRemover />
+        <Preloader />
+        <CustomCursor />
         {children}
       </body>
     </html>
