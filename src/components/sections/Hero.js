@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FiArrowUpRight, FiDownload, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import { SiUpwork } from 'react-icons/si';
 import KineticText from '@/components/ui/KineticText';
 import MagneticButton from '@/components/ui/MagneticButton';
 import ParticleField from '@/components/ui/ParticleField';
@@ -139,6 +140,7 @@ export default function Hero() {
                         {[
                             { icon: FiGithub, label: 'GitHub', href: 'https://github.com/mbilaliftikhar' },
                             { icon: FiLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mbilaliftikhar/' },
+                            { icon: SiUpwork, label: 'Upwork', href: 'https://www.upwork.com/freelancers/~012e9b9487fa4f8fce' },
                             { icon: FiMail, label: 'Email', href: 'mailto:bilaliftikhar431@gmail.com' },
                         ].map(({ icon: Icon, label, href }) => (
                             <motion.a

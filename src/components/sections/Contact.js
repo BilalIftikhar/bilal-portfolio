@@ -3,14 +3,17 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowRight, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import { SiUpwork } from 'react-icons/si';
 import KineticText from '@/components/ui/KineticText';
 import MagneticButton from '@/components/ui/MagneticButton';
 
 const EMAIL = 'bilaliftikhar431@gmail.com';
+const WHATSAPP = '923247203309'; // 0324 7203309 in international format
 
 const SOCIALS = [
     { icon: FiGithub, label: 'GitHub', href: 'https://github.com/mbilaliftikhar' },
     { icon: FiLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mbilaliftikhar/' },
+    { icon: SiUpwork, label: 'Upwork', href: 'https://www.upwork.com/freelancers/~012e9b9487fa4f8fce' },
     { icon: FiMail, label: 'Email', href: `mailto:${EMAIL}` },
 ];
 
@@ -29,29 +32,21 @@ export default function Contact() {
 
     const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-    const onSubmit = async (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
         const errs = validate(form);
         setErrors(errs);
         if (Object.keys(errs).length) return;
 
-        setState('loading');
-        try {
-            const res = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
-            });
-            if (!res.ok) throw new Error('failed');
-            setState('success');
-            setForm({ name: '', email: '', message: '' });
-        } catch {
-            // Fallback: hand off to email client so the message is never lost
-            window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
-                `Project enquiry from ${form.name}`
-            )}&body=${encodeURIComponent(form.message + '\n\n— ' + form.name + ' (' + form.email + ')')}`;
-            setState('error');
-        }
+        // Open WhatsApp chat to Bilal with the message pre-filled
+        const text = `Hi Bilal, I'm ${form.name} (${form.email}).\n\n${form.message}`;
+        window.open(
+            `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`,
+            '_blank',
+            'noopener,noreferrer'
+        );
+        setState('success');
+        setForm({ name: '', email: '', message: '' });
     };
 
     const field =
@@ -98,8 +93,8 @@ export default function Contact() {
                                         transition={{ duration: 0.6, ease: 'easeInOut' }}
                                     />
                                 </svg>
-                                <h3 className="font-heading font-bold text-2xl text-ink">Message sent!</h3>
-                                <p className="text-muted mt-2">Thanks — I&apos;ll get back to you within 24 hours.</p>
+                                <h3 className="font-heading font-bold text-2xl text-ink">Opening WhatsApp…</h3>
+                                <p className="text-muted mt-2">Just hit send in WhatsApp and I&apos;ll reply right away.</p>
                             </motion.div>
                         ) : (
                             <motion.form
@@ -140,11 +135,8 @@ export default function Contact() {
                                     {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
                                 </div>
                                 <MagneticButton type="submit" variant="gold" className="w-full justify-center">
-                                    {state === 'loading' ? 'Sending…' : (<>SEND MESSAGE <FiArrowRight /></>)}
+                                    SEND MESSAGE <FiArrowRight />
                                 </MagneticButton>
-                                {state === 'error' && (
-                                    <p className="text-center text-sm text-muted">Opening your email app as a fallback…</p>
-                                )}
                             </motion.form>
                         )}
                     </AnimatePresence>

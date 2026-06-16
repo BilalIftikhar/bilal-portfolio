@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiGithub, FiLinkedin, FiMail, FiArrowUp } from 'react-icons/fi';
+import { SiUpwork } from 'react-icons/si';
 
 const SOCIALS = [
     { icon: FiGithub, label: 'GitHub', href: 'https://github.com/mbilaliftikhar' },
     { icon: FiLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mbilaliftikhar/' },
+    { icon: SiUpwork, label: 'Upwork', href: 'https://www.upwork.com/freelancers/~012e9b9487fa4f8fce' },
     { icon: FiMail, label: 'Email', href: 'mailto:bilaliftikhar431@gmail.com' },
 ];
 
