@@ -2,18 +2,19 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
-import { SiUpwork } from 'react-icons/si';
+import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import { SiUpwork, SiWhatsapp } from 'react-icons/si';
 import KineticText from '@/components/ui/KineticText';
 import MagneticButton from '@/components/ui/MagneticButton';
+import { PERSON, SOCIAL_LINKS } from '@/lib/site';
 
-const EMAIL = 'bilaliftikhar431@gmail.com';
-const WHATSAPP = '923247203309'; // 0324 7203309 in international format
+const EMAIL = PERSON.email;
+const WHATSAPP = PERSON.whatsapp;
 
 const SOCIALS = [
-    { icon: FiGithub, label: 'GitHub', href: 'https://github.com/mbilaliftikhar' },
-    { icon: FiLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mbilaliftikhar/' },
-    { icon: SiUpwork, label: 'Upwork', href: 'https://www.upwork.com/freelancers/~012e9b9487fa4f8fce' },
+    { icon: FiGithub, label: 'GitHub', href: SOCIAL_LINKS.github },
+    { icon: FiLinkedin, label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
+    { icon: SiUpwork, label: 'Upwork', href: SOCIAL_LINKS.upwork },
     { icon: FiMail, label: 'Email', href: `mailto:${EMAIL}` },
 ];
 
@@ -21,7 +22,8 @@ function validate({ name, email, message }) {
     const errs = {};
     if (!name.trim() || name.trim().length < 2) errs.name = 'Please enter your name';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Enter a valid email';
-    if (!message.trim() || message.trim().length < 10) errs.message = 'A little more detail, please';
+    if (!message.trim() || message.trim().length < 10)
+        errs.message = 'Please add at least a sentence about your project';
     return errs;
 }
 
@@ -61,13 +63,17 @@ export default function Contact() {
             </div>
 
             <div className="max-w-5xl mx-auto relative z-10 w-full text-center">
-                <span className="text-gold font-mono text-xs tracking-[0.3em] uppercase">/ Don&apos;t be a stranger</span>
+                <span className="text-gold font-mono text-xs tracking-[0.3em] uppercase">/ Get in touch</span>
                 <h2 className="font-display text-5xl sm:text-6xl lg:text-8xl mt-3 leading-none">
-                    <KineticText text="LET'S BUILD" /> <br />
-                    <KineticText text="SOMETHING GREAT" className="text-gradient" />
+                    <span className="sr-only">Let&apos;s build something great</span>
+                    <span aria-hidden="true">
+                        <KineticText text="LET'S BUILD" /> <br />
+                        <KineticText text="SOMETHING GREAT" className="text-gradient" />
+                    </span>
                 </h2>
                 <p className="text-muted mt-5 max-w-xl mx-auto mb-12">
-                    Open to freelance, full-time and AI consulting opportunities. Tell me what you&apos;re building.
+                    Available for freelance projects, full-time roles and AI consulting. Tell me
+                    what you&apos;re building and what&apos;s in the way.
                 </p>
 
                 <div className="glass-strong chroma rounded-3xl p-8 sm:p-10 text-left max-w-2xl mx-auto">
@@ -93,8 +99,17 @@ export default function Contact() {
                                         transition={{ duration: 0.6, ease: 'easeInOut' }}
                                     />
                                 </svg>
-                                <h3 className="font-heading font-bold text-2xl text-ink">Opening WhatsApp…</h3>
-                                <p className="text-muted mt-2">Just hit send in WhatsApp and I&apos;ll reply right away.</p>
+                                <h3 className="font-heading font-bold text-2xl text-ink">
+                                    Opening WhatsApp…
+                                </h3>
+                                <p className="text-muted mt-2">
+                                    Your message is pre-filled — hit send there and I&apos;ll usually
+                                    reply within a day. If the tab didn&apos;t open, email me at{' '}
+                                    <a href={`mailto:${EMAIL}`} className="text-gold underline">
+                                        {EMAIL}
+                                    </a>
+                                    .
+                                </p>
                             </motion.div>
                         ) : (
                             <motion.form
@@ -135,8 +150,12 @@ export default function Contact() {
                                     {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
                                 </div>
                                 <MagneticButton type="submit" variant="gold" className="w-full justify-center">
-                                    SEND MESSAGE <FiArrowRight />
+                                    <SiWhatsapp /> SEND VIA WHATSAPP
                                 </MagneticButton>
+                                <p className="text-muted/80 text-xs text-center">
+                                    Opens WhatsApp with your message ready to send — nothing is
+                                    submitted from this page.
+                                </p>
                             </motion.form>
                         )}
                     </AnimatePresence>

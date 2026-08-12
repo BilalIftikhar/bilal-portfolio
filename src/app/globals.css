@@ -38,7 +38,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===== Grain overlay (whole page, premium feel) ===== */
+/* ===== Grain overlay (whole page, premium feel) =====
+   The animated variant repaints a 200%-viewport layer 8x a second, which is
+   the single most expensive thing on the page. It is promoted to its own
+   compositor layer and only animates on devices with a fine pointer, so
+   phones and tablets get the static texture at no cost. */
 body::before {
   content: '';
   position: fixed;
@@ -49,7 +53,35 @@ body::before {
   opacity: 0.035;
   pointer-events: none;
   z-index: 9998;
-  animation: grain 0.5s steps(4) infinite;
+  transform: translateZ(0);
+  contain: strict;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body::before {
+    will-change: transform;
+    animation: grain 0.7s steps(4) infinite;
+  }
+}
+
+/* ===== Skip link ===== */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100001;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  background: var(--gold);
+  color: #1a1408;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 /* ===== Custom scrollbar ===== */
@@ -197,14 +229,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   border-radius: 6px;
 }
 
-/* ===== Gradient mesh blobs ===== */
+/* ===== Gradient mesh blobs =====
+   A 90px blur over a 500px layer is costly to composite; phones get a much
+   cheaper radius since the blobs read the same at that size. */
 .mesh-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
+  filter: blur(56px);
   opacity: 0.5;
   pointer-events: none;
   will-change: transform;
+  transform: translateZ(0);
+}
+@media (min-width: 1024px) {
+  .mesh-blob { filter: blur(90px); }
 }
 
 /* ===== Marquee ===== */

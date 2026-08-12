@@ -27,20 +27,47 @@ export default function CustomCursor() {
         let my = window.innerHeight / 2;
         let rx = mx;
         let ry = my;
-        let raf;
+        let raf = 0;
+        let running = false;
 
         const onMove = (e) => {
             mx = e.clientX;
             my = e.clientY;
             dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+            start();
         };
+
+        // The ring lerps toward the pointer, so once it has caught up there is
+        // nothing left to animate — parking the loop keeps an idle page at 0%
+        // CPU instead of running a frame callback forever.
         const loop = () => {
-            rx += (mx - rx) * 0.16;
-            ry += (my - ry) * 0.16;
+            const dx = mx - rx;
+            const dy = my - ry;
+            if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+                rx = mx;
+                ry = my;
+                ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+                running = false;
+                return;
+            }
+            rx += dx * 0.16;
+            ry += dy * 0.16;
             ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
             raf = requestAnimationFrame(loop);
         };
-        raf = requestAnimationFrame(loop);
+
+        function start() {
+            if (running) return;
+            running = true;
+            raf = requestAnimationFrame(loop);
+        }
+
+        // Park both elements at the centre up front. Without this the loop is
+        // idle until the first mousemove and the untransformed ring sits in
+        // the top-left corner of the page.
+        const park = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+        dot.style.transform = park;
+        ring.style.transform = park;
 
         const onOver = (e) => {
             const viewEl = e.target.closest('[data-cursor="view"]');
@@ -52,10 +79,11 @@ export default function CustomCursor() {
             ring.textContent = viewEl ? 'VIEW' : '';
         };
 
-        window.addEventListener('mousemove', onMove);
-        document.addEventListener('mouseover', onOver);
+        window.addEventListener('mousemove', onMove, { passive: true });
+        document.addEventListener('mouseover', onOver, { passive: true });
 
         return () => {
+            running = false;
             cancelAnimationFrame(raf);
             window.removeEventListener('mousemove', onMove);
             document.removeEventListener('mouseover', onOver);

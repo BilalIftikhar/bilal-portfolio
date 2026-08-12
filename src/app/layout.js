@@ -1,8 +1,11 @@
 import { Inter, Bebas_Neue, Syne, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import DevtoolsRemover from "@/components/DevtoolsRemover";
 import CustomCursor from "@/components/ui/CustomCursor";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 import Preloader from "@/components/sections/Preloader";
+import StructuredData from "@/components/StructuredData";
+import MotionProvider from "@/components/MotionProvider";
+import { PERSON, SITE_URL, TAGLINE } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,35 +28,83 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   display: "swap",
+  // Only the mono weights actually used on the page.
+  weight: ["400", "500"],
 });
 
+const TITLE = `${PERSON.name} — ${PERSON.jobTitle}`;
+
 export const metadata = {
-  title: "Muhammad Bilal Iftikhar — Senior Software Engineer & AI Integration Specialist",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: `%s — ${PERSON.shortName}`,
+  },
   description:
-    "I architect intelligent systems that scale, surprise, and solve. Senior Software Engineer specializing in AI/ML integration — LLMs, RAG pipelines, AI agents — and modern full-stack web development.",
-  keywords:
-    "Muhammad Bilal Iftikhar, Senior Software Engineer, AI Integration Specialist, AI Engineer, LLM, RAG, LangChain, OpenAI, Claude, Vector Databases, Next.js, React, Python, Full Stack Developer, Machine Learning, AI Agents",
-  authors: [{ name: "Muhammad Bilal Iftikhar" }],
-  creator: "Muhammad Bilal Iftikhar",
-  metadataBase: new URL("https://bilaliftikhar.com"),
+    "Senior software engineer specialising in AI integration — LLM features, RAG pipelines and AI agents — plus modern full-stack web development with Next.js, React, Node.js and Laravel.",
+  applicationName: `${PERSON.shortName} — Portfolio`,
+  keywords: [
+    "Muhammad Bilal Iftikhar",
+    "Bilal Iftikhar",
+    "Senior Software Engineer",
+    "AI Integration Specialist",
+    "AI Engineer",
+    "LLM developer",
+    "RAG pipelines",
+    "LangChain developer",
+    "OpenAI API",
+    "Claude API",
+    "vector databases",
+    "AI agents",
+    "Next.js developer",
+    "React developer",
+    "Laravel developer",
+    "full stack developer Pakistan",
+    "hire AI developer",
+  ],
+  authors: [{ name: PERSON.name, url: SITE_URL }],
+  creator: PERSON.name,
+  publisher: PERSON.name,
+  category: "technology",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    type: "website",
+    type: "profile",
     locale: "en_US",
-    url: "https://bilaliftikhar.com",
-    title: "Muhammad Bilal Iftikhar — Senior Software Engineer & AI Integration Specialist",
-    description: "I architect intelligent systems that scale, surprise, and solve.",
-    siteName: "Bilal Iftikhar",
-    images: [{ url: "/profile.png", width: 1200, height: 1200, alt: "Muhammad Bilal Iftikhar" }],
+    url: SITE_URL,
+    title: TITLE,
+    description: TAGLINE,
+    siteName: `${PERSON.shortName} — Portfolio`,
+    firstName: "Muhammad Bilal",
+    lastName: "Iftikhar",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Bilal Iftikhar — Senior Software Engineer & AI Integration Specialist",
-    description: "I architect intelligent systems that scale, surprise, and solve.",
-    images: ["/profile.png"],
+    title: TITLE,
+    description: TAGLINE,
   },
   icons: {
     icon: [{ url: "/profile.png", type: "image/png" }],
     apple: [{ url: "/profile.png", sizes: "180x180", type: "image/png" }],
+  },
+  formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
   },
 };
 
@@ -61,6 +112,7 @@ export const viewport = {
   themeColor: "#050510",
   width: "device-width",
   initialScale: 1,
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }) {
@@ -69,10 +121,16 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${bebas.variable} ${syne.variable} ${mono.variable} antialiased`}
       >
-        <DevtoolsRemover />
-        <Preloader />
-        <CustomCursor />
-        {children}
+        <StructuredData />
+        <a href="#home" className="skip-link">
+          Skip to content
+        </a>
+        <MotionProvider>
+          <Preloader />
+          <ScrollProgress />
+          <CustomCursor />
+          {children}
+        </MotionProvider>
       </body>
     </html>
   );

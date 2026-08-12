@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiGithub, FiLinkedin, FiMail, FiArrowUp } from 'react-icons/fi';
 import { SiUpwork } from 'react-icons/si';
+import { PERSON, SOCIAL_LINKS } from '@/lib/site';
 
 const SOCIALS = [
-    { icon: FiGithub, label: 'GitHub', href: 'https://github.com/mbilaliftikhar' },
-    { icon: FiLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mbilaliftikhar/' },
-    { icon: SiUpwork, label: 'Upwork', href: 'https://www.upwork.com/freelancers/~012e9b9487fa4f8fce' },
-    { icon: FiMail, label: 'Email', href: 'mailto:bilaliftikhar431@gmail.com' },
+    { icon: FiGithub, label: 'GitHub', href: SOCIAL_LINKS.github },
+    { icon: FiLinkedin, label: 'LinkedIn', href: SOCIAL_LINKS.linkedin },
+    { icon: SiUpwork, label: 'Upwork', href: SOCIAL_LINKS.upwork },
+    { icon: FiMail, label: 'Email', href: `mailto:${PERSON.email}` },
 ];
 
 export default function Footer() {
@@ -51,7 +52,7 @@ export default function Footer() {
 
                     <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 border-t border-white/5">
                         <p className="text-muted text-xs tracking-wide text-center sm:text-left">
-                            © 2026 Muhammad Bilal Iftikhar · All rights reserved
+                            © {new Date().getFullYear()} {PERSON.name} · All rights reserved
                         </p>
                         <p className="text-muted text-xs tracking-wide font-mono">
                             Built with Next.js · Deployed on Vercel

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { FiLayout, FiCpu, FiServer, FiCloud, FiDatabase } from 'react-icons/fi';
 import KineticText from '@/components/ui/KineticText';
+import Tilt3D from '@/components/ui/Tilt3D';
 
 const CARDS = [
     {
@@ -67,36 +68,49 @@ function Card({ card, index }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5, delay: index * 0.08 }}
-            whileHover={{ boxShadow: `0 0 50px ${card.glow}` }}
-            className={`chroma glass rounded-2xl p-6 flex flex-col group ${card.span}`}
+            className={card.span}
         >
-            <div className="flex items-center justify-between mb-4">
-                <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted">
-                    {card.cat}
-                </span>
-                <motion.span
-                    className={`text-2xl ${card.accent}`}
-                    whileHover={{ rotate: 20, scale: 1.15 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                >
-                    <Icon />
-                </motion.span>
-            </div>
-
-            <h3 className={`font-heading font-bold mb-5 ${card.big ? 'text-3xl' : 'text-2xl'} text-ink`}>
-                {card.cat}
-            </h3>
-
-            <div className="flex flex-wrap gap-2 mt-auto">
-                {card.skills.map((s) => (
-                    <span
-                        key={s}
-                        className="px-3 py-1.5 rounded-lg text-[13px] text-muted bg-white/5 border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:text-ink hover:border-white/20"
-                    >
-                        {s}
+            <Tilt3D
+                max={8}
+                scale={1.015}
+                className={`chroma glass rounded-2xl p-6 h-full flex flex-col group hover:shadow-[0_0_50px_var(--card-glow)]`}
+                style={{ '--card-glow': card.glow }}
+            >
+                <Tilt3D.Layer depth={26} className="flex items-center justify-between mb-4">
+                    {/* An index, not a repeat of the heading directly below it. */}
+                    <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted">
+                        {String(index + 1).padStart(2, '0')} / {card.skills.length} tools
                     </span>
-                ))}
-            </div>
+                    <motion.span
+                        className={`text-2xl ${card.accent}`}
+                        whileHover={{ rotate: 20, scale: 1.15 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                        <Icon />
+                    </motion.span>
+                </Tilt3D.Layer>
+
+                <Tilt3D.Layer depth={18}>
+                    <h3
+                        className={`font-heading font-bold mb-5 ${
+                            card.big ? 'text-3xl' : 'text-2xl'
+                        } text-ink`}
+                    >
+                        {card.cat}
+                    </h3>
+                </Tilt3D.Layer>
+
+                <div className="flex flex-wrap gap-2 mt-auto">
+                    {card.skills.map((s) => (
+                        <span
+                            key={s}
+                            className="px-3 py-1.5 rounded-lg text-[13px] text-muted bg-white/5 border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:text-ink hover:border-white/20"
+                        >
+                            {s}
+                        </span>
+                    ))}
+                </div>
+            </Tilt3D>
         </motion.div>
     );
 }
@@ -108,7 +122,11 @@ export default function Skills() {
                 <div className="mb-14 text-center">
                     <span className="text-gold font-mono text-xs tracking-[0.3em] uppercase">/ Toolkit</span>
                     <h2 className="font-display text-4xl sm:text-5xl lg:text-7xl mt-3">
-                        <KineticText text="THE STACK I" /> <KineticText text="WIELD" className="text-gradient" />
+                        <span className="sr-only">The stack I build with</span>
+                        <span aria-hidden="true">
+                            <KineticText text="THE STACK I" />{' '}
+                            <KineticText text="BUILD WITH" className="text-gradient" />
+                        </span>
                     </h2>
                 </div>
 

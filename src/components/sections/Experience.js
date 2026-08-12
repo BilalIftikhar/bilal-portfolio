@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Tilt3D from '@/components/ui/Tilt3D';
 
 const ITEMS = [
     {
@@ -9,9 +10,9 @@ const ITEMS = [
         role: 'Full Stack Developer — AI Integration',
         date: '2024 — Present',
         points: [
-            'Architect scalable platforms with Next.js + Laravel for a global live-events talent network.',
-            'Ship LLM-powered features: semantic matching, search and assistive workflows.',
-            'Own performance, API design and end-to-end delivery.',
+            'Build and run the Next.js + Laravel platform behind a global live-events talent network.',
+            'Ship LLM-backed features: semantic matching, search and assisted job workflows.',
+            'Own API design, performance budgets and release delivery end to end.',
         ],
         tech: ['Next.js', 'Laravel', 'OpenAI', 'AWS'],
     },
@@ -20,9 +21,9 @@ const ITEMS = [
         role: 'Senior Software Engineer',
         date: '2022 — 2024',
         points: [
-            'Built scalable back-ends in Laravel and dynamic UIs in React, Next.js and Vue.',
-            'Designed RAG and LLM-assisted features from prototype to release.',
-            'Optimized database queries and collaborated across product & UX.',
+            'Built Laravel back-ends and React, Next.js and Vue front-ends for client products.',
+            'Took RAG and LLM-assisted features from prototype through to release.',
+            'Rewrote the slowest database queries and worked directly with product and design.',
         ],
         tech: ['Laravel', 'React', 'LangChain', 'MySQL'],
     },
@@ -31,9 +32,9 @@ const ITEMS = [
         role: 'Software Engineer',
         date: '2020 — 2022',
         points: [
-            'Delivered 50+ web apps and storefronts for UK, UAE and US clients.',
-            'Built reusable component libraries and CI/CD pipelines.',
-            'Grew into full-stack ownership and applied-AI work.',
+            'Delivered 50+ web apps and storefronts for clients in the UK, UAE and US.',
+            'Built reusable component libraries and CI/CD pipelines across those projects.',
+            'Moved from front-end delivery into full-stack ownership and applied AI work.',
         ],
         tech: ['Vue', 'Node.js', 'Stripe', 'Docker'],
     },
@@ -50,7 +51,7 @@ function Dot() {
 
 function Card({ item }) {
     return (
-        <div className="chroma glass rounded-2xl p-6">
+        <Tilt3D max={7} scale={1.015} className="chroma glass rounded-2xl p-6">
             <span className="font-mono text-xs text-muted">{item.date}</span>
             <h3 className="font-heading font-bold text-xl text-ink mt-1">{item.role}</h3>
             <p className="text-secondary-light text-sm mb-4">{item.company}</p>
@@ -69,7 +70,7 @@ function Card({ item }) {
                     </span>
                 ))}
             </div>
-        </div>
+        </Tilt3D>
     );
 }
 
@@ -78,6 +79,7 @@ export default function Experience() {
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['start center', 'end center'],
+        layoutEffect: false,
     });
     const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 

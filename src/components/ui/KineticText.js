@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 /**
@@ -17,24 +17,25 @@ export default function KineticText({
     trigger = 'scroll', // 'scroll' | 'load'
     once = true,
 }) {
-    const reduced = useReducedMotion();
     const words = String(text).split(' ');
 
     const container = {
         hidden: {},
         visible: { transition: { staggerChildren: stagger, delayChildren: delay } },
     };
-    const charV = reduced
-        ? { hidden: { opacity: 1 }, visible: { opacity: 1 } }
-        : {
-              hidden: { y: '110%', opacity: 0, rotateX: -75 },
-              visible: {
-                  y: '0%',
-                  opacity: 1,
-                  rotateX: 0,
-                  transition: { duration: 0.7, ease: [0.33, 1, 0.68, 1] },
-              },
-          };
+    // One set of variants for server and client alike. Reduced-motion users are
+    // handled by <MotionConfig reducedMotion="user"> at the root, which skips
+    // the transform half and leaves the fade — branching the variants here
+    // instead produced markup that did not match the server render.
+    const charV = {
+        hidden: { y: '110%', opacity: 0, rotateX: -75 },
+        visible: {
+            y: '0%',
+            opacity: 1,
+            rotateX: 0,
+            transition: { duration: 0.7, ease: [0.33, 1, 0.68, 1] },
+        },
+    };
 
     const animProps =
         trigger === 'load'

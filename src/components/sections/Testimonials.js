@@ -24,18 +24,31 @@ const GRADS = [
 export default function Testimonials() {
     const [active, setActive] = useState(0);
     const [paused, setPaused] = useState(false);
+    const [onScreen, setOnScreen] = useState(false);
     const n = DATA.length;
     const touch = useRef(null);
+    const stageRef = useRef(null);
 
     const go = (dir) => setActive((a) => (a + dir + n) % n);
 
+    // Only advance while the carousel is actually on screen — otherwise it
+    // keeps re-rendering spring animations for a section nobody is looking at.
     useEffect(() => {
-        if (paused) return;
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduced) return;
-        const id = setInterval(() => setActive((a) => (a + 1) % n), 4000);
+        const el = stageRef.current;
+        if (!el) return;
+        const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), {
+            threshold: 0.25,
+        });
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (paused || !onScreen) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const id = setInterval(() => setActive((a) => (a + 1) % n), 5000);
         return () => clearInterval(id);
-    }, [paused, n]);
+    }, [paused, onScreen, n]);
 
     const onDown = (e) => (touch.current = e.clientX ?? e.touches?.[0]?.clientX);
     const onUp = (e) => {
@@ -56,10 +69,13 @@ export default function Testimonials() {
 
                 {/* 3D stage */}
                 <div
+                    ref={stageRef}
                     className="relative h-[420px] sm:h-[380px] select-none"
                     style={{ perspective: '1400px' }}
                     onMouseEnter={() => setPaused(true)}
                     onMouseLeave={() => setPaused(false)}
+                    onFocusCapture={() => setPaused(true)}
+                    onBlurCapture={() => setPaused(false)}
                     onPointerDown={onDown}
                     onPointerUp={onUp}
                 >

@@ -9,6 +9,7 @@ import {
 } from 'framer-motion';
 import Image from 'next/image';
 import { FiArrowUpRight, FiGithub } from 'react-icons/fi';
+import Tilt3D from '@/components/ui/Tilt3D';
 
 const PROJECTS = [
     {
@@ -51,13 +52,18 @@ const PROJECTS = [
 
 function ProjectCard({ p, index }) {
     return (
-        <article
+        <Tilt3D
+            as="article"
+            max={7}
+            scale={1.015}
+            perspective={1400}
+            glare={false}
             data-cursor="view"
-            className="chroma group relative shrink-0 w-[82vw] sm:w-[460px] h-[62vh] sm:h-[68vh] rounded-3xl overflow-hidden glass"
+            className="chroma group shrink-0 w-[82vw] sm:w-[460px] h-[62vh] sm:h-[68vh] rounded-3xl overflow-hidden glass"
         >
             <Image
                 src={p.image}
-                alt={p.title}
+                alt={`${p.title} — ${p.category.toLowerCase()} built with ${p.tech.join(', ')}`}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 640px) 82vw, 460px"
@@ -85,31 +91,41 @@ function ProjectCard({ p, index }) {
                     <a href={p.live} target="_blank" rel="noopener noreferrer" className="btn-gold !py-2.5 !px-5 !text-xs">
                         Live Site <FiArrowUpRight />
                     </a>
-                    <a
-                        href={p.repo || p.live}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${p.title} details`}
-                        className="btn-ghost !py-2.5 !px-4 !text-xs"
-                    >
-                        <FiGithub />
-                    </a>
+                    {p.repo && (
+                        <a
+                            href={p.repo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${p.title} source code on GitHub`}
+                            className="btn-ghost !py-2.5 !px-4 !text-xs"
+                        >
+                            <FiGithub />
+                        </a>
+                    )}
                 </div>
             </div>
-        </article>
+        </Tilt3D>
     );
 }
 
-export default function Projects() {
+/**
+ * Desktop: the section is taller than the viewport and its inner track slides
+ * horizontally as you scroll through it.
+ *
+ * This lives in its own component so `useScroll` is only ever mounted when
+ * its target element is actually rendered — calling it from the shared parent
+ * subscribed to a ref that the mobile branch never attaches.
+ */
+function ProjectsPinned() {
     const sectionRef = useRef(null);
     const trackRef = useRef(null);
     const [distance, setDistance] = useState(0);
-    const [isDesktop, setIsDesktop] = useState(false);
     const [active, setActive] = useState(0);
 
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ['start start', 'end end'],
+        layoutEffect: false,
     });
     const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
 
@@ -119,38 +135,13 @@ export default function Projects() {
 
     useEffect(() => {
         const measure = () => {
-            const desktop = window.matchMedia('(min-width: 768px)').matches;
-            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            setIsDesktop(desktop && !reduced);
-            if (trackRef.current && desktop && !reduced) {
-                setDistance(Math.max(0, trackRef.current.scrollWidth - window.innerWidth));
-            } else {
-                setDistance(0);
-            }
+            if (!trackRef.current) return;
+            setDistance(Math.max(0, trackRef.current.scrollWidth - window.innerWidth));
         };
         measure();
-        window.addEventListener('resize', measure);
+        window.addEventListener('resize', measure, { passive: true });
         return () => window.removeEventListener('resize', measure);
     }, []);
-
-    // Mobile / reduced-motion: simple horizontal swipe rail
-    if (!isDesktop) {
-        return (
-            <section id="projects" className="section-pad bg-night">
-                <div className="max-w-7xl mx-auto mb-10">
-                    <span className="text-gold font-mono text-xs tracking-[0.3em] uppercase">/ Selected Work</span>
-                    <h2 className="font-display text-4xl sm:text-5xl mt-3">PROJECTS</h2>
-                </div>
-                <div className="flex gap-5 overflow-x-auto pb-6 px-1 snap-x">
-                    {PROJECTS.map((p, i) => (
-                        <div key={p.title} className="snap-center">
-                            <ProjectCard p={p} index={i} />
-                        </div>
-                    ))}
-                </div>
-            </section>
-        );
-    }
 
     return (
         <section
@@ -200,4 +191,44 @@ export default function Projects() {
             </div>
         </section>
     );
+}
+
+/** Mobile / reduced-motion: a plain swipeable rail. */
+function ProjectsRail() {
+    return (
+        <section id="projects" className="section-pad bg-night">
+            <div className="max-w-7xl mx-auto mb-10">
+                <span className="text-gold font-mono text-xs tracking-[0.3em] uppercase">/ Selected Work</span>
+                <h2 className="font-display text-4xl sm:text-5xl mt-3">SELECTED WORK</h2>
+            </div>
+            <div className="flex gap-5 overflow-x-auto pb-6 px-1 snap-x">
+                {PROJECTS.map((p, i) => (
+                    <div key={p.title} className="snap-center">
+                        <ProjectCard p={p} index={i} />
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+export default function Projects() {
+    // Server and first client render agree on the rail; the pinned variant is
+    // swapped in only once we know the viewport supports it.
+    const [pinned, setPinned] = useState(false);
+
+    useEffect(() => {
+        const mqDesktop = window.matchMedia('(min-width: 768px)');
+        const mqReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const sync = () => setPinned(mqDesktop.matches && !mqReduced.matches);
+        sync();
+        mqDesktop.addEventListener('change', sync);
+        mqReduced.addEventListener('change', sync);
+        return () => {
+            mqDesktop.removeEventListener('change', sync);
+            mqReduced.removeEventListener('change', sync);
+        };
+    }, []);
+
+    return pinned ? <ProjectsPinned /> : <ProjectsRail />;
 }

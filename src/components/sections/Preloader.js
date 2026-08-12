@@ -1,36 +1,71 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { markAppReady } from '@/lib/appReady';
 
 const NAME = 'BILAL IFTIKHAR';
+const SEEN_KEY = 'mb-preloaded';
+
+const noopSubscribe = () => () => {};
+
+/**
+ * Whether the intro has already played this session. Read through
+ * useSyncExternalStore so the value is derived rather than copied into state
+ * from an effect — sessionStorage does not exist during SSR, and on the server
+ * we assume "already seen" so nothing renders into the static HTML.
+ */
+function useAlreadySeen() {
+    return useSyncExternalStore(
+        noopSubscribe,
+        () => {
+            try {
+                return sessionStorage.getItem(SEEN_KEY) !== null;
+            } catch {
+                // Private mode / storage blocked — treat as a repeat visit.
+                return true;
+            }
+        },
+        () => true
+    );
+}
 
 export default function Preloader() {
-    const [show, setShow] = useState(false);
+    const seen = useAlreadySeen();
+    const [finished, setFinished] = useState(false);
     const [phase, setPhase] = useState(0); // 0 monogram, 1 name
     const reduced = useReducedMotion();
 
+    const show = !seen && !finished;
+
     useEffect(() => {
-        // Only on first visit per session
-        const seen = sessionStorage.getItem('mb-preloaded');
-        if (seen) return;
-        setShow(true);
+        if (seen) {
+            markAppReady();
+            return;
+        }
         document.body.style.overflow = 'hidden';
 
         const total = reduced ? 400 : 2600;
         const t1 = setTimeout(() => setPhase(1), reduced ? 100 : 950);
         const t2 = setTimeout(() => {
-            setShow(false);
-            sessionStorage.setItem('mb-preloaded', '1');
+            setFinished(true);
+            try {
+                sessionStorage.setItem(SEEN_KEY, '1');
+            } catch {
+                /* storage blocked — the overlay simply shows again next load */
+            }
             document.body.style.overflow = '';
+            // Let entrance animations start now that the page is visible.
+            markAppReady();
         }, total);
 
         return () => {
             clearTimeout(t1);
             clearTimeout(t2);
             document.body.style.overflow = '';
+            markAppReady();
         };
-    }, [reduced]);
+    }, [reduced, seen]);
 
     return (
         <AnimatePresence>
