@@ -25,14 +25,19 @@
 html {
   scroll-behavior: smooth;
   width: 100%;
-  overflow-x: hidden;
+  /* `clip`, never `hidden`: overflow-x:hidden turns the root into a scroll
+     container, which silently breaks `position: sticky` for every descendant.
+     That is why the pinned projects section scrolled off the top of the screen
+     and left the viewport empty. `clip` contains the same overflow without
+     creating a scroll container. */
+  overflow-x: clip;
 }
 
 body {
   background: var(--base);
   color: var(--ink);
   font-family: var(--font-inter), Inter, system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -346,6 +351,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @media (min-width: 1280px) { .section-pad { padding: 9rem 5rem; } }
 
 img { max-width: 100%; height: auto; display: block; }
+
+/* Pre-2022 engines without overflow:clip — they lose sticky pinning, but
+   containing the horizontal overflow matters more there. */
+@supports not (overflow: clip) {
+  html, body { overflow-x: hidden; }
+}
 
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {

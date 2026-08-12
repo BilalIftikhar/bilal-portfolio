@@ -14,7 +14,10 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="bg-night overflow-x-hidden">
+      {/* overflow-x-clip, not -hidden: `hidden` makes this element a scroll
+          container, which disables `position: sticky` for the pinned projects
+          section nested inside it. */}
+      <main className="bg-night overflow-x-clip">
         <Hero />
         <MarqueeStrip />
         <About />
